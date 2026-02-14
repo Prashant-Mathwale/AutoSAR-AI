@@ -1,65 +1,83 @@
 /**
- * Rule Engine Configuration
- * Defines all risk scoring thresholds and weights
+ * Rule Engine Configuration - Indian Banking (RBI/FIU-IND Compliance)
  */
 
-export const RULE_ENGINE_VERSION = '1.0.0';
+export const RULE_ENGINE_VERSION = '2.0.0-INR';
 
-// High-risk jurisdictions (FATF grey/black list)
+// Indian Reporting Thresholds (in INR Lakhs)
+export const INR_CRITICAL_THRESHOLD = 4500000; // ₹45 Lakhs - CTR threshold
+export const INR_STRUCTURING_UPPER = 990000; // ₹9.9 Lakhs
+export const INR_STRUCTURING_LOWER = 850000; // ₹8.5 Lakhs
+export const INR_PAN_THRESHOLD = 50000; // ₹50K - PAN reporting
+export const INR_CASH_THRESHOLD = 1000000; // ₹10 Lakhs - Cash Transaction Report
+
+// High-risk jurisdictions (FATF Black/Grey Lists + Tax Havens)
 export const HIGH_RISK_COUNTRIES = new Set([
   'KP', // North Korea
   'IR', // Iran
   'MM', // Myanmar
-  'KY', // Cayman Islands (for demo purposes)
+  'KY', // Cayman Islands
+  'BM', // Bermuda
+  'VG', // British Virgin Islands
+  'PA', // Panama
+  'CH', // Switzerland (banking secrecy)
+  'LI', // Liechtenstein
+  'MC', // Monaco
 ]);
 
 export const MEDIUM_RISK_COUNTRIES = new Set([
   'PK', // Pakistan
+  'AF', // Afghanistan
   'YE', // Yemen
+  'SY', // Syria
+  'SD', // Sudan
   'UG', // Uganda
-  'PH', // Philippines
+  'HK', // Hong Kong (for certain activities)
 ]);
 
-// Transaction thresholds
-export const CTR_THRESHOLD = 10000; // Currency Transaction Report threshold
-export const STRUCTURING_WINDOW_HOURS = 24;
-export const STRUCTURING_COUNT_THRESHOLD = 3;
-export const LARGE_TRANSACTION_THRESHOLD = 50000;
-export const SIGNIFICANT_TRANSACTION_THRESHOLD = 25000;
+// Structuring detection window
+export const STRUCTURING_WINDOW_DAYS = 30; // Look for patterns over 30 days
+export const STRUCTURING_COUNT_THRESHOLD = 10; // 10+ transactions indicate structuring
 
-// Risk score weights
+// Risk score weights (Indian context)
 export const RISK_WEIGHTS = {
-  LARGE_AMOUNT: 30,
-  SIGNIFICANT_AMOUNT: 20,
+  CRITICAL_AMOUNT: 40,        // Single transaction > ₹45L
+  LARGE_AMOUNT: 30,           // Transaction > ₹10L
+  SIGNIFICANT_AMOUNT: 20,     // Transaction > ₹5L
+  STRUCTURING_PATTERN: 45,    // Multiple transactions near ₹10L limit
+  SMURFING_PATTERN: 40,       // Many small transactions below PAN limit
   HIGH_RISK_JURISDICTION: 35,
   MEDIUM_RISK_JURISDICTION: 20,
-  STRUCTURING_PATTERN: 40,
-  VELOCITY_HIGH: 20,
-  VELOCITY_MEDIUM: 10,
+  VELOCITY_EXTREME: 25,       // Rapid transaction velocity
+  VELOCITY_HIGH: 15,
   ROUND_AMOUNT: 10,
-  PROFILE_INCONSISTENCY_HIGH: 15,
+  PROFILE_INCONSISTENCY_HIGH: 20,
   PROFILE_INCONSISTENCY_MEDIUM: 10,
   CASH_TRANSACTION: 15,
+  UNEXPLAINED_WEALTH: 30,
 };
 
 // Risk level thresholds
 export const RISK_LEVELS = {
-  CRITICAL: 75,
-  HIGH: 50,
-  MEDIUM: 25,
+  CRITICAL: 80,
+  HIGH: 60,
+  MEDIUM: 40,
   LOW: 0,
 };
 
-// Typology classifications
+// Typology classifications (Indian context)
 export const TYPOLOGIES = {
-  STRUCTURING: 'Structuring / Smurfing',
-  TRADE_BASED: 'Trade-Based Money Laundering',
+  STRUCTURING: 'Structuring / CTR Evasion',
+  SMURFING: 'Smurfing / PAN Evasion',
   LAYERING: 'Layering',
-  INTEGRATION: 'Integration',
-  TERRORIST_FINANCING: 'Potential Terrorist Financing',
-  SANCTIONS_EVASION: 'Sanctions Evasion',
+  HAWALA: 'Potential Hawala Transaction',
   TAX_EVASION: 'Tax Evasion Indicators',
-  FRAUD: 'Fraud Indicators',
+  BLACK_MONEY: 'Unexplained Cash Sources',
+  BENAMI: 'Potential Benami Transaction',
+  TRADE_BASED: 'Trade-Based Money Laundering',
+  TERRORIST_FINANCING: 'Potential Terrorist Financing',
 };
 
-export const ROUND_AMOUNTS = [1000, 5000, 10000, 25000, 50000, 100000];
+export const ROUND_AMOUNTS_INR = [
+  50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000
+];

@@ -1,0 +1,424 @@
+{
+  "customers": [
+    {
+      "customer_id": "CUST-001",
+      "full_name": "Sarah Johnson",
+      "date_of_birth": "1985-03-15",
+      "ssn_tin": "XXX-XX-1234",
+      "address": "456 Maple Street, Chicago, IL 60601",
+      "occupation": "Software Engineer",
+      "risk_rating": "Low",
+      "expected_monthly_volume": 8000,
+      "account_opened_date": "2020-01-15",
+      "transactions": [
+        {
+          "transaction_id": "TXN-001-001",
+          "amount": 3500,
+          "currency": "USD",
+          "date": "2026-02-01",
+          "counterparty": "ABC Tech Company",
+          "counterparty_country": "US",
+          "type": "Salary Deposit",
+          "description": "Monthly salary"
+        },
+        {
+          "transaction_id": "TXN-001-002",
+          "amount": 1200,
+          "currency": "USD",
+          "date": "2026-02-05",
+          "counterparty": "City Rent Management",
+          "counterparty_country": "US",
+          "type": "Bill Payment",
+          "description": "Rent payment"
+        },
+        {
+          "transaction_id": "TXN-001-003",
+          "amount": 450,
+          "currency": "USD",
+          "date": "2026-02-10",
+          "counterparty": "Grocery Store",
+          "counterparty_country": "US",
+          "type": "Debit Card",
+          "description": "Groceries"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-002",
+      "full_name": "Michael Chen",
+      "date_of_birth": "1978-07-22",
+      "ssn_tin": "XXX-XX-5678",
+      "address": "789 Oak Avenue, San Francisco, CA 94102",
+      "occupation": "Teacher",
+      "risk_rating": "Low",
+      "expected_monthly_volume": 6000,
+      "account_opened_date": "2019-06-20",
+      "transactions": [
+        {
+          "transaction_id": "TXN-002-001",
+          "amount": 4800,
+          "currency": "USD",
+          "date": "2026-02-01",
+          "counterparty": "School District",
+          "counterparty_country": "US",
+          "type": "Direct Deposit",
+          "description": "Salary"
+        },
+        {
+          "transaction_id": "TXN-002-002",
+          "amount": 800,
+          "currency": "USD",
+          "date": "2026-02-08",
+          "counterparty": "Electric Company",
+          "counterparty_country": "US",
+          "type": "Bill Payment",
+          "description": "Utilities"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-003",
+      "full_name": "John Smith",
+      "date_of_birth": "1972-05-15",
+      "ssn_tin": "XXX-XX-9012",
+      "address": "123 Main Street, New York, NY 10001",
+      "occupation": "Business Owner",
+      "risk_rating": "High",
+      "expected_monthly_volume": 20000,
+      "account_opened_date": "2018-03-10",
+      "transactions": [
+        {
+          "transaction_id": "TXN-003-001",
+          "amount": 45000,
+          "currency": "USD",
+          "date": "2026-02-05",
+          "counterparty": "ABC Trading Ltd",
+          "counterparty_country": "KY",
+          "type": "Wire Transfer",
+          "description": "International payment"
+        },
+        {
+          "transaction_id": "TXN-003-002",
+          "amount": 38000,
+          "currency": "USD",
+          "date": "2026-02-06",
+          "counterparty": "XYZ Imports Inc",
+          "counterparty_country": "KY",
+          "type": "Wire Transfer",
+          "description": "Business transaction"
+        },
+        {
+          "transaction_id": "TXN-003-003",
+          "amount": 42000,
+          "currency": "USD",
+          "date": "2026-02-07",
+          "counterparty": "Global Services Corp",
+          "counterparty_country": "KY",
+          "type": "Wire Transfer",
+          "description": "Consulting fees"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-004",
+      "full_name": "Emily Rodriguez",
+      "date_of_birth": "1990-11-08",
+      "ssn_tin": "XXX-XX-3456",
+      "address": "321 Pine Street, Austin, TX 78701",
+      "occupation": "Nurse",
+      "risk_rating": "Low",
+      "expected_monthly_volume": 7000,
+      "account_opened_date": "2021-02-14",
+      "transactions": [
+        {
+          "transaction_id": "TXN-004-001",
+          "amount": 5200,
+          "currency": "USD",
+          "date": "2026-02-01",
+          "counterparty": "City Hospital",
+          "counterparty_country": "US",
+          "type": "Payroll",
+          "description": "Bi-weekly paycheck"
+        },
+        {
+          "transaction_id": "TXN-004-002",
+          "amount": 950,
+          "currency": "USD",
+          "date": "2026-02-03",
+          "counterparty": "Car Loan Servicing",
+          "counterparty_country": "US",
+          "type": "Auto Payment",
+          "description": "Car payment"
+        },
+        {
+          "transaction_id": "TXN-004-003",
+          "amount": 300,
+          "currency": "USD",
+          "date": "2026-02-12",
+          "counterparty": "Amazon",
+          "counterparty_country": "US",
+          "type": "Online Purchase",
+          "description": "Shopping"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-005",
+      "full_name": "Robert Martinez",
+      "date_of_birth": "1968-09-30",
+      "ssn_tin": "XXX-XX-7890",
+      "address": "555 Sunset Blvd, Los Angeles, CA 90028",
+      "occupation": "Unemployed",
+      "risk_rating": "Medium",
+      "expected_monthly_volume": 2000,
+      "account_opened_date": "2022-08-05",
+      "transactions": [
+        {
+          "transaction_id": "TXN-005-001",
+          "amount": 9800,
+          "currency": "USD",
+          "date": "2026-02-03",
+          "counterparty": "Cash Deposit",
+          "counterparty_country": "US",
+          "type": "Cash Deposit",
+          "description": "Cash deposit"
+        },
+        {
+          "transaction_id": "TXN-005-002",
+          "amount": 9500,
+          "currency": "USD",
+          "date": "2026-02-04",
+          "counterparty": "Cash Deposit",
+          "counterparty_country": "US",
+          "type": "Cash Deposit",
+          "description": "Cash deposit"
+        },
+        {
+          "transaction_id": "TXN-005-003",
+          "amount": 9200,
+          "currency": "USD",
+          "date": "2026-02-05",
+          "counterparty": "Cash Deposit",
+          "counterparty_country": "US",
+          "type": "Cash Deposit",
+          "description": "Cash deposit"
+        },
+        {
+          "transaction_id": "TXN-005-004",
+          "amount": 9900,
+          "currency": "USD",
+          "date": "2026-02-06",
+          "counterparty": "Cash Deposit",
+          "counterparty_country": "US",
+          "type": "Cash Deposit",
+          "description": "Cash deposit"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-006",
+      "full_name": "Jennifer Williams",
+      "date_of_birth": "1982-12-20",
+      "ssn_tin": "XXX-XX-2468",
+      "address": "678 River Road, Portland, OR 97201",
+      "occupation": "Accountant",
+      "risk_rating": "Low",
+      "expected_monthly_volume": 9000,
+      "account_opened_date": "2017-11-30",
+      "transactions": [
+        {
+          "transaction_id": "TXN-006-001",
+          "amount": 6500,
+          "currency": "USD",
+          "date": "2026-02-01",
+          "counterparty": "Accounting Firm LLC",
+          "counterparty_country": "US",
+          "type": "Salary",
+          "description": "Monthly salary"
+        },
+        {
+          "transaction_id": "TXN-006-002",
+          "amount": 1400,
+          "currency": "USD",
+          "date": "2026-02-02",
+          "counterparty": "Mortgage Company",
+          "counterparty_country": "US",
+          "type": "Mortgage Payment",
+          "description": "Home loan"
+        },
+        {
+          "transaction_id": "TXN-006-003",
+          "amount": 600,
+          "currency": "USD",
+          "date": "2026-02-15",
+          "counterparty": "Insurance Co",
+          "counterparty_country": "US",
+          "type": "Insurance",
+          "description": "Auto insurance"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-007",
+      "full_name": "Ahmed Hassan",
+      "date_of_birth": "1975-04-18",
+      "ssn_tin": "XXX-XX-1357",
+      "address": "890 Commerce Street, Houston, TX 77002",
+      "occupation": "Import/Export Business",
+      "risk_rating": "High",
+      "expected_monthly_volume": 50000,
+      "account_opened_date": "2023-01-20",
+      "transactions": [
+        {
+          "transaction_id": "TXN-007-001",
+          "amount": 75000,
+          "currency": "USD",
+          "date": "2026-02-02",
+          "counterparty": "Middle East Trading Co",
+          "counterparty_country": "PK",
+          "type": "Wire Transfer",
+          "description": "Business payment"
+        },
+        {
+          "transaction_id": "TXN-007-002",
+          "amount": 82000,
+          "currency": "USD",
+          "date": "2026-02-04",
+          "counterparty": "Dubai Exports LLC",
+          "counterparty_country": "PK",
+          "type": "Wire Transfer",
+          "description": "Trade settlement"
+        },
+        {
+          "transaction_id": "TXN-007-003",
+          "amount": 95000,
+          "currency": "USD",
+          "date": "2026-02-08",
+          "counterparty": "Asian Imports Inc",
+          "counterparty_country": "PK",
+          "type": "Wire Transfer",
+          "description": "Inventory purchase"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-008",
+      "full_name": "David Thompson",
+      "date_of_birth": "1993-06-25",
+      "ssn_tin": "XXX-XX-9753",
+      "address": "234 College Ave, Boston, MA 02115",
+      "occupation": "Student",
+      "risk_rating": "Low",
+      "expected_monthly_volume": 1500,
+      "account_opened_date": "2024-09-01",
+      "transactions": [
+        {
+          "transaction_id": "TXN-008-001",
+          "amount": 800,
+          "currency": "USD",
+          "date": "2026-02-01",
+          "counterparty": "University",
+          "counterparty_country": "US",
+          "type": "Scholarship",
+          "description": "Financial aid"
+        },
+        {
+          "transaction_id": "TXN-008-002",
+          "amount": 500,
+          "currency": "USD",
+          "date": "2026-02-05",
+          "counterparty": "Part-time Job",
+          "counterparty_country": "US",
+          "type": "Direct Deposit",
+          "description": "Wages"
+        },
+        {
+          "transaction_id": "TXN-008-003",
+          "amount": 200,
+          "currency": "USD",
+          "date": "2026-02-10",
+          "counterparty": "Campus Store",
+          "counterparty_country": "US",
+          "type": "Debit Card",
+          "description": "Textbooks"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-009",
+      "full_name": "Maria Garcia",
+      "date_of_birth": "1980-08-14",
+      "ssn_tin": "XXX-XX-8642",
+      "address": "567 Mountain View, Denver, CO 80202",
+      "occupation": "Real Estate Agent",
+      "risk_rating": "Medium",
+      "expected_monthly_volume": 15000,
+      "account_opened_date": "2020-05-12",
+      "transactions": [
+        {
+          "transaction_id": "TXN-009-001",
+          "amount": 12000,
+          "currency": "USD",
+          "date": "2026-02-03",
+          "counterparty": "Realty Commission",
+          "counterparty_country": "US",
+          "type": "Commission",
+          "description": "House sale commission"
+        },
+        {
+          "transaction_id": "TXN-009-002",
+          "amount": 8500,
+          "currency": "USD",
+          "date": "2026-02-15",
+          "counterparty": "Brokerage Firm",
+          "counterparty_country": "US",
+          "type": "Commission",
+          "description": "Property sale"
+        }
+      ]
+    },
+    {
+      "customer_id": "CUST-010",
+      "full_name": "James Wilson",
+      "date_of_birth": "1965-02-28",
+      "ssn_tin": "XXX-XX-7531",
+      "address": "432 Beach Road, Miami, FL 33139",
+      "occupation": "Retired",
+      "risk_rating": "Low",
+      "expected_monthly_volume": 5000,
+      "account_opened_date": "2015-07-08",
+      "transactions": [
+        {
+          "transaction_id": "TXN-010-001",
+          "amount": 3200,
+          "currency": "USD",
+          "date": "2026-02-01",
+          "counterparty": "Social Security",
+          "counterparty_country": "US",
+          "type": "Direct Deposit",
+          "description": "Pension payment"
+        },
+        {
+          "transaction_id": "TXN-010-002",
+          "amount": 1800,
+          "currency": "USD",
+          "date": "2026-02-01",
+          "counterparty": "401k Distribution",
+          "counterparty_country": "US",
+          "type": "Transfer",
+          "description": "Retirement fund"
+        },
+        {
+          "transaction_id": "TXN-010-003",
+          "amount": 450,
+          "currency": "USD",
+          "date": "2026-02-07",
+          "counterparty": "Medical Center",
+          "counterparty_country": "US",
+          "type": "Debit",
+          "description": "Healthcare"
+        }
+      ]
+    }
+  ]
+}

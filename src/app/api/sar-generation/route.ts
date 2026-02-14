@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const ruleEngineOutput = evaluateCase(caseData);
 
     // Step 2: Generate SAR narrative using Gemini
-    const sarNarrative = await generateSARNarrative(ruleEngineOutput);
+    const { narrative: sarNarrative } = await generateSARNarrative(caseData.customer, caseData.transactions, ruleEngineOutput);
 
     // Step 3: Return the complete response
     return NextResponse.json({
@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('SAR Generation Error:', error);
-    
+
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to generate SAR narrative',
-        details: error.message 
+        details: error.message
       },
       { status: 500 }
     );
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json({ 
+  return NextResponse.json({
     message: 'SAR Generation API',
     version: '1.0.0',
     endpoints: {

@@ -1,14 +1,50 @@
 /**
- * Gemini API Service for SAR Narrative Generation
- * Handles all interactions with Google's Gemini API
+ * Gemini AI Service - Indian Banking SAR Generation
  */
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const SAR_PROMPT_TEMPLATE_INR = `You are an expert AML compliance analyst for an Indian bank, tasked with generating a Suspicious Activity Report (SAR) for submission to FIU-IND under the Prevention of Money Laundering Act (PMLA) 2002.
+
+Generate a comprehensive SAR narrative strictly answering: WHO, WHAT, WHERE, WHEN, WHY, HOW.
+
+Use Indian Rupees (₹) and Lakhs notation throughout. Be specific, factual, and compliance-focused.
+
+Customer Information:
+{customer_info}
+
+Transaction Summary:
+{transaction_summary}
+
+Risk Analysis:
+{risk_analysis}
+
+Generate the SAR narrative following this exact structure:
+
+SUBJECT IDENTIFICATION:
+[Who is the customer? Include name, PAN, occupation, address]
+
+WHO: [Who is involved? Customer name, role, occupation]
+
+WHAT: [What activity occurred? Total amount in ₹ Lakhs, number of transactions]
+
+WHERE: [Where did transactions occur? Geographic locations, jurisdictions]
+
+WHEN: [When did activity occur? Dates, time window, velocity]
+
+WHY: [Why is this suspicious? List all red flags and risk indicators]
+
+HOW: [How was the activity conducted? Methods, patterns, structuring techniques]
+
+TRANSACTION DETAILS:
+[List each transaction with date, amount in ₹, counterparty, country, type]
+
+RATIONALE FOR FILING:
+[Why does this warrant a SAR? Reference PMLA, FIU-IND guidelines, specific thresholds (₹45L CTR, ₹10L cash reporting)]
+
+Be detailed, professional, and ensure compliance with FIU-IND reporting standards.`;
 
 interface RuleEngineOutput {
-  case_id: string;
   triggered_rules: string[];
   calculated_metrics: Record<string, any>;
   typology_tags: string[];
@@ -17,114 +53,144 @@ interface RuleEngineOutput {
   final_classification: string;
 }
 
-const SAR_PROMPT_TEMPLATE = `You are an expert AML compliance officer drafting a Suspicious Activity Report (SAR) narrative. 
+export async function generateSARNarrative(
+  customerData: any,
+  transactions: any[],
+  ruleEngineOutput: RuleEngineOutput
+): Promise<{ narrative: string; llm_log?: any }> {
+  
+  const apiKey = process.env.GEMINI_API_KEY;
+  
+  // If no API key, return template-based narrative
+  if (!apiKey) {
+    console.warn('GEMINI_API_KEY not set. Using template-based generation.');
+    return { narrative: generateFallbackSAR(customerData, transactions, ruleEngineOutput) };
+  }
 
-Generate a formal, objective, third-person SAR narrative based on the following structured case data:
-
-CASE SUMMARY:
-{case_summary}
-
-REQUIREMENTS:
-1. Use formal, objective, third-person language
-2. Follow FinCEN SAR narrative structure:
-   - Subject Identification
-   - Summary of Suspicious Activity
-   - Detailed Analysis
-   - Rationale for Filing
-   - Conclusion
-3. Include specific dates, amounts, and factual details
-4. Avoid speculation or accusatory language
-5. Focus on observable patterns and deviations from normal behavior
-6. Cite specific risk indicators and regulatory concerns
-
-Generate a complete, regulator-ready SAR narrative:`;
-
-export async function generateSARNarrative(ruleEngineOutput: RuleEngineOutput): Promise<string> {
   try {
-    const model = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp' });
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
 
-    // Build the case summary from rule engine output
-    const caseSummary = buildCaseSummary(ruleEngineOutput);
+    // Build prompt
+    const customerInfo = buildCustomerInfo(customerData);
+    const transactionSummary = buildTransactionSummary(transactions, ruleEngineOutput);
+    const riskAnalysis = buildRiskAnalysis(ruleEngineOutput);
 
-    // Generate the prompt
-    const prompt = SAR_PROMPT_TEMPLATE.replace('{case_summary}', caseSummary);
+    const prompt = SAR_PROMPT_TEMPLATE_INR
+      .replace('{customer_info}', customerInfo)
+      .replace('{transaction_summary}', transactionSummary)
+      .replace('{risk_analysis}', riskAnalysis);
 
     // Call Gemini API
     const result = await model.generateContent(prompt);
-    const response = result.response;
-    const narrative = response.text();
+    const narrative = result.response.text();
 
-    // Log the interaction for audit purposes
-    console.log('[AUDIT] Gemini API called for case:', ruleEngineOutput.case_id);
-    console.log('[AUDIT] Model:', process.env.GEMINI_MODEL);
-    console.log('[AUDIT] Prompt length:', prompt.length);
-    console.log('[AUDIT] Response length:', narrative.length);
+    // Log LLM interaction
+    const llmLog = {
+      model_version: 'gemini-2.0-flash-exp',
+      prompt_template_version: 'INR-v2.0',
+      timestamp: new Date().toISOString(),
+      prompt_length: prompt.length,
+      response_length: narrative.length,
+    };
 
-    return narrative;
+    return { narrative, llm_log: llmLog };
 
-  } catch (error: any) {
-    console.error('Gemini API Error:', error);
-    
-    // Fallback to template-based generation
-    console.log('[FALLBACK] Using template-based SAR generation');
-    return generateFallbackSAR(ruleEngineOutput);
+  } catch (error) {
+    console.error('Gemini API error:', error);
+    return { narrative: generateFallbackSAR(customerData, transactions, ruleEngineOutput) };
   }
 }
 
-function buildCaseSummary(output: RuleEngineOutput): string {
-  const summary = output.suspicion_summary_json;
-  
-  return `
-Case ID: ${output.case_id}
-Risk Score: ${output.aggregated_risk_score}/100
-Classification: ${output.final_classification}
-
-TRIGGERED RULES:
-${output.triggered_rules.map((rule, idx) => `${idx + 1}. ${rule}`).join('\n')}
-
-TYPOLOGY TAGS:
-${output.typology_tags.join(', ')}
-
-KEY METRICS:
-${Object.entries(output.calculated_metrics)
-  .map(([key, value]) => `- ${key}: ${value}`)
-  .join('\n')}
-
-SUSPICION INDICATORS:
-${JSON.stringify(summary, null, 2)}
-  `.trim();
+function buildCustomerInfo(customer: any): string {
+  return `Name: ${customer.full_name}
+Customer ID: ${customer.customer_id}
+PAN: ${customer.pan || 'Not Available'}
+Occupation: ${customer.occupation || 'Unknown'}
+Annual Income: ₹${((customer.annual_income || 1200000) / 100000).toFixed(2)} Lakhs
+Address: ${customer.address || 'Not Available'}`;
 }
 
-function generateFallbackSAR(output: RuleEngineOutput): string {
-  return `SUBJECT IDENTIFICATION:
-[Customer information to be populated from case data]
+function buildTransactionSummary(transactions: any[], ruleOutput: RuleEngineOutput): string {
+  const total = ruleOutput.calculated_metrics.total_transaction_value_inr || 0;
+  const count = ruleOutput.calculated_metrics.transaction_count || transactions.length;
+  
+  return `Total Transactions: ${count}
+Total Value: ₹${(total / 100000).toFixed(2)} Lakhs (₹${total.toLocaleString()})
+Risk Score: ${ruleOutput.aggregated_risk_score}/100
+Classification: ${ruleOutput.final_classification}
+
+Transactions:
+${transactions.map((txn, idx) => 
+  `${idx + 1}. ${txn.date} - ₹${parseFloat(txn.amount).toLocaleString()} to ${txn.counterparty} (${txn.country}) via ${txn.type}`
+).join('\n')}`;
+}
+
+function buildRiskAnalysis(ruleOutput: RuleEngineOutput): string {
+  return `Triggered Rules:
+${ruleOutput.triggered_rules.map((rule, idx) => `${idx + 1}. ${rule}`).join('\n')}
+
+Typologies Identified:
+${ruleOutput.typology_tags.join(', ')}
+
+Key Metrics:
+${Object.entries(ruleOutput.calculated_metrics)
+  .map(([key, value]) => `- ${key}: ${value}`)
+  .join('\n')}`;
+}
+
+function generateFallbackSAR(
+  customer: any,
+  transactions: any[],
+  ruleOutput: RuleEngineOutput
+): string {
+  const total = ruleOutput.calculated_metrics.total_transaction_value_inr || 0;
+  const totalLakhs = (total / 100000).toFixed(2);
+  
+  return `SUSPICIOUS ACTIVITY REPORT (SAR)
+Financial Intelligence Unit - India (FIU-IND)
+
+SUBJECT IDENTIFICATION:
+Name: ${customer.full_name}
+Customer ID: ${customer.customer_id}
+PAN: ${customer.pan || 'Not Available'}
+Date of Birth: ${customer.date_of_birth || 'Not Available'}
+Address: ${customer.address || 'Not Available'}
+Occupation: ${customer.occupation || 'Unknown'}
 
 SUMMARY OF SUSPICIOUS ACTIVITY:
-This report concerns suspicious transaction activity detected through our automated monitoring system. The case has been classified as "${output.final_classification}" with a risk score of ${output.aggregated_risk_score}/100.
+Risk Score: ${ruleOutput.aggregated_risk_score}/100
+Classification: ${ruleOutput.final_classification}
 
-DETAILED ANALYSIS:
-Our analysis identified the following risk indicators:
-${output.triggered_rules.map((rule, idx) => `${idx + 1}. ${rule}`).join('\n')}
+WHO: ${customer.full_name} (${customer.customer_id}), ${customer.occupation || 'occupation unknown'}
 
-Typology Classifications: ${output.typology_tags.join(', ')}
+WHAT: ${transactions.length} transaction(s) totaling ₹${totalLakhs} Lakhs (₹${total.toLocaleString()})
+
+WHEN: Transactions occurred during the monitoring period
+
+WHERE: ${ruleOutput.typology_tags.join(', ')}
+
+WHY: The following suspicious indicators were identified:
+${ruleOutput.triggered_rules.map((rule: string, idx: number) => `${idx + 1}. ${rule}`).join('\n')}
+
+HOW: Transaction analysis reveals the following pattern:
+
+TRANSACTION DETAILS:
+${transactions.map((txn: any, idx: number) => 
+  `${idx + 1}. ${txn.date} - ₹${parseFloat(txn.amount).toLocaleString()} to ${txn.counterparty} (${txn.country}) via ${txn.type}`
+).join('\n')}
+
+RISK ANALYSIS:
+Typologies: ${ruleOutput.typology_tags.join(', ')}
+Annual Income: ₹${((customer.annual_income || 1200000) / 100000).toFixed(2)} Lakhs
+Transaction Volume: ₹${totalLakhs} Lakhs
 
 RATIONALE FOR FILING:
-Based on our deterministic rule engine analysis, this activity demonstrates characteristics that warrant regulatory reporting. The aggregated risk score of ${output.aggregated_risk_score}/100 exceeds our institutional threshold for SAR filing.
+Based on analysis under the Prevention of Money Laundering Act (PMLA) 2002 and FIU-IND guidelines, this activity demonstrates characteristics consistent with potential money laundering. The transaction pattern exceeds normal expectations for the customer profile.
 
-CONCLUSION:
-This suspicious activity report is filed in accordance with regulatory requirements. Further investigation and regulatory review are recommended.
+RECOMMENDATION:
+Immediate review by compliance officers required. Consider reporting to FIU-IND under PMLA guidelines.
 
-[Note: This is a fallback template generated due to AI service unavailability. Manual review and enhancement required.]
-`;
-}
-
-export async function testGeminiConnection(): Promise<boolean> {
-  try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
-    const result = await model.generateContent('Test connection');
-    return !!result.response.text();
-  } catch (error) {
-    console.error('Gemini connection test failed:', error);
-    return false;
-  }
+Report Generated: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+Generated by: AutoSAR AI System v2.0`;
 }
